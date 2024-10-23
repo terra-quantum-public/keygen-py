@@ -1,14 +1,12 @@
 [package]
 name = "keygen-py"
-version = "0.0.1"
-authors = ["Terra Quantum AG"]
-description = "Unofficial Keygen SDK for Python using Rust bindings. Integrate license activation and offline licensing."
-license = "MIT"
 edition = "2021"
 
 [dependencies]
 keygen-rs = "0.2.2"
-pyo3 = "0.22.5"
+pyo3 = { version = "0.21.2", features = ["extension-module"] }
+pyo3-async-runtimes = { version = "0.21.0", features = ["tokio-runtime"] }
+chrono = "0.4.38"
 
 [lib]
 name = "keygen_sh"
