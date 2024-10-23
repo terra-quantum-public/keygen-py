@@ -1,0 +1,16 @@
+[package]
+name = "keygen-py"
+version = "0.0.1"
+authors = ["Terra Quantum AG"]
+description = "Unofficial Keygen SDK for Python using Rust bindings. Integrate license activation and offline licensing."
+license = "MIT"
+edition = "2021"
+
+[dependencies]
+keygen-rs = "0.2.2"
+pyo3 = "0.22.5"
+
+[lib]
+name = "keygen_sh"
+crate-type = ["cdylib"]
+
