@@ -7,6 +7,7 @@ keygen-rs = "0.2.2"
 pyo3 = { version = "0.21.2", features = ["extension-module"] }
 pyo3-async-runtimes = { version = "0.21.0", features = ["tokio-runtime"] }
 chrono = "0.4.38"
+openssl = { version = "0.10", features = ["vendored"] }
 
 [lib]
 name = "keygen_sh"
