@@ -51,5 +51,6 @@ fn keygen_sh(_: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(verify, m)?)?;
     m.add_class::<SchemeCode>()?;
     m.add_class::<KeygenConfig>()?;
+    m.add_class::<License>()?;
     Ok(())
 }
