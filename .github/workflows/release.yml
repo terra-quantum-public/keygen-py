@@ -79,10 +79,9 @@ jobs:
           manylinux: ${{ matrix.platform.manylinux }}
           before-script-linux: ${{ matrix.platform.before }}
       - name: Upload wheels
-        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.platform.runner }}-${{ matrix.platform.target }}
+          name: wheels-${{ matrix.platform.runner }}-${{ matrix.platform.manylinux }}-${{ matrix.platform.target }}
           path: dist
 
   sdist:
@@ -95,7 +94,6 @@ jobs:
           command: sdist
           args: --out dist
       - name: Upload sdist
-        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: wheels-sdist
@@ -104,7 +102,6 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
     needs: [build, sdist]
     permissions:
       id-token: write
