@@ -32,18 +32,20 @@ class License:
     status: Optional[str]
     policy: Optional[str]
 
-def verify(scheme: SchemeCode, key: str) -> str:
+def verify(scheme: SchemeCode, signed_key: str) -> str:
     """
     Verify an offline key.
 
     :param scheme: the scheme code
-    :param key: the key to verify
+    :param signed_key: the key to verify
     :return: the data in the key
-    :raises: ValueError if the key is invalid
+    :raises: RuntimeError if the key is invalid
     """
     ...
 
-async def validate(fingerprints: Optional[list[str]] = None, entitlements: Optional[list[str]] = None) -> License:
+async def validate(
+    fingerprints: Optional[list[str]] = None, entitlements: Optional[list[str]] = None
+) -> License:
     """
     Validate a license.
 
