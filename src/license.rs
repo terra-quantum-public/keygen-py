@@ -36,9 +36,9 @@ impl License {
     }
 }
 
-impl Into<license::SchemeCode> for SchemeCode {
-    fn into(self) -> license::SchemeCode {
-        match self {
+impl From<SchemeCode> for license::SchemeCode {
+    fn from(val: SchemeCode) -> Self {
+        match val {
             SchemeCode::Ed25519Sign => license::SchemeCode::Ed25519Sign,
         }
     }

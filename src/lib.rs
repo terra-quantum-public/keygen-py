@@ -29,8 +29,8 @@ fn validate<'a>(py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitle
     let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty_bound(py));
     let entitlements = entitlements.unwrap_or_else(|| PyList::empty_bound(py));
 
-    let fingerprints_vec = pylist_to_string_slice(fingerprints.into())?;
-    let entitlements_vec = pylist_to_string_slice(entitlements.into())?;
+    let fingerprints_vec = pylist_to_string_slice(fingerprints)?;
+    let entitlements_vec = pylist_to_string_slice(entitlements)?;
 
     pyo3_async_runtimes::tokio::future_into_py(py, async move {
         let result = keygen_rs::validate(&fingerprints_vec, &entitlements_vec).await;

@@ -13,6 +13,7 @@ impl KeygenConfig {
     #[pyo3(signature = (api_url, api_version, api_prefix, account, product, package=None, environment=None, license_key=None, token=None, public_key=None, platform=None, user_agent=None, max_clock_drift=5)
     )]
     #[new]
+    #[allow(clippy::too_many_arguments)]
     pub fn new(api_url: String,
                api_version: String,
                api_prefix: String,
@@ -34,7 +35,7 @@ impl KeygenConfig {
                 api_prefix,
                 account,
                 product,
-                package: package.or(Some("".to_string())).unwrap(),
+                package: package.unwrap_or("".to_string()),
                 environment,
                 license_key,
                 token,
@@ -47,8 +48,8 @@ impl KeygenConfig {
     }
 }
 
-impl Into<config::KeygenConfig> for KeygenConfig {
-    fn into(self) -> config::KeygenConfig {
-        self.inner
+impl From<KeygenConfig> for config::KeygenConfig {
+    fn from(val: KeygenConfig) -> Self {
+        val.inner
     }
 }
