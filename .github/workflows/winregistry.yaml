@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - conda-recipes/deps/winregistry/*
+      - .github/workflows/winregistry.yaml
 
 jobs:
   build:
