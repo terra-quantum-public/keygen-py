@@ -5,6 +5,8 @@ on:
     branches:
       - main
     types: [opened, synchronize, reopened]
+    paths-ignore:
+      - conda-recipes/deps/**
 
 permissions:
   contents: read
@@ -12,6 +14,10 @@ permissions:
 # Make sure CI fails on all warnings, including Clippy lints
 env:
   RUSTFLAGS: "-Dwarnings"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -114,7 +120,7 @@ jobs:
         with:
           upload-artifact: false
           artifact-name: conda-${{ matrix.platform.runner }}-${{ matrix.platform.target }}
-          recipe-path: 'conda-recipe/recipe.yaml'
+          recipe-path: 'conda-recipes/recipe.yaml'
           build-args: '--target-platform ${{ matrix.platform.target-platform }} --experimental'
 
   sdist:
