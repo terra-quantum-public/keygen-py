@@ -106,7 +106,7 @@ jobs:
           upload-artifact: true
           artifact-name: conda-${{ matrix.platform.runner }}-${{ matrix.platform.target }}
           recipe-path: 'conda-recipe/recipe.yaml'
-          build-args: '--target-platform --experimental ${{ matrix.platform.target-platform }}'
+          build-args: '--target-platform ${{ matrix.platform.target-platform }} --experimental'
 
   sdist:
     runs-on: ubuntu-latest

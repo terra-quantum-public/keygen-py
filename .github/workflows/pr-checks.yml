@@ -32,8 +32,10 @@ jobs:
         platform:
           - runner: ubuntu-latest
             target: x86_64
+            target-platform: linux-64
             before: 'yum install --assumeyes perl-core'
             manylinux: 'auto'
+            create-conda-package: true
           - runner: ubuntu-latest
             target: x86_64
             before: 'apt update && apt install -y libssl-dev'
@@ -67,23 +69,37 @@ jobs:
             manylinux: 'musllinux_1_2'
           - runner: windows-latest
             target: x64
+            target-platform: win-64
+            create-conda-package: true
           - runner: windows-latest
             target: x86
           - runner: macos-latest
             target: x86_64
+            target-platform: osx-64
+            create-conda-package: true
           - runner: macos-latest
             target: aarch64
+            target-platform: osx-arm64
+            create-conda-package: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         if: runner.os == 'Windows'
         with:
-          python-version: 3.*
+          python-version: |
+            3.9
+            3.10
+            3.11
+            3.12
           architecture: ${{ matrix.platform.target }}
       - uses: actions/setup-python@v5
         if: runner.os != 'Windows'
         with:
-          python-version: 3.*
+          python-version: |
+            3.9
+            3.10
+            3.11
+            3.12
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -92,6 +108,14 @@ jobs:
           sccache: 'true'
           manylinux: ${{ matrix.platform.manylinux }}
           before-script-linux: ${{ matrix.platform.before }}
+      - name: Build conda package
+        if: matrix.platform.create-conda-package
+        uses: prefix-dev/rattler-build-action@v0.2.19
+        with:
+          upload-artifact: false
+          artifact-name: conda-${{ matrix.platform.runner }}-${{ matrix.platform.target }}
+          recipe-path: 'conda-recipe/recipe.yaml'
+          build-args: '--target-platform ${{ matrix.platform.target-platform }} --experimental'
 
   sdist:
     runs-on: ubuntu-latest
