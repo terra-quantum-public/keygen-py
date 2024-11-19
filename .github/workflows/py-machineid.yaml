@@ -1,4 +1,4 @@
-name: Release pymachineid
+name: Release py-machineid
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - conda-recipes/deps/py-machineid/*
+      - .github/workflows/py-machineid.yaml
 
 jobs:
   build:
