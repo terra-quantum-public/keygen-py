@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - conda-recipes/deps/winregistry
+      - conda-recipes/deps/winregistry/*
 
 jobs:
   build:

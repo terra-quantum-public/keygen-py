@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - conda-recipes/deps/py-machineid
+      - conda-recipes/deps/py-machineid/*
 
 jobs:
   build:

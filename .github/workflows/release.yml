@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - conda-recipes/deps/**
 
 permissions:
   contents: read
