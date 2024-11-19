@@ -1,0 +1,46 @@
+schema_version: 1
+
+context:
+  name: ${{ load_from_file("pyproject.toml").project.name }}
+  version: ${{ load_from_file("pyproject.toml").project.version }}
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  path: ../dist
+  use_gitignore: false
+
+build:
+  script: pip install --find-links . keygen-py
+  number: 0
+
+requirements:
+  build:
+    - python
+  host:
+    - python
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python
+
+tests:
+  - python:
+      imports:
+        - keygen_sh
+      pip_check: true
+
+about:
+  summary: Unofficial Keygen SDK for Python. Integrate license activation and offline licensing. Wrapper around keygen-rs rust crate
+  license: MIT
+  license_file: LICENSE
+  homepage: https://github.com/terra-quantum-public/keygen-py
+
+extra:
+  recipe-maintainers:
+    - sbtq
+    - cedrictq
+
