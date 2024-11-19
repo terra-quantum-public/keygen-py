@@ -18,8 +18,10 @@ jobs:
         platform:
           - runner: ubuntu-latest
             target: x86_64
+            target-platform: linux-64
             before: 'yum install --assumeyes perl-core'
             manylinux: 'auto'
+            create-conda-package: true
           - runner: ubuntu-latest
             target: x86_64
             before: 'apt update && apt install -y libssl-dev'
@@ -53,23 +55,37 @@ jobs:
             manylinux: 'musllinux_1_2'
           - runner: windows-latest
             target: x64
+            target-platform: win-64
+            create-conda-package: true
           - runner: windows-latest
             target: x86
           - runner: macos-latest
             target: x86_64
+            target-platform: osx-64
+            create-conda-package: true
           - runner: macos-latest
             target: aarch64
+            target-platform: osx-arm64
+            create-conda-package: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         if: runner.os == 'Windows'
         with:
-          python-version: 3.*
+          python-version: |
+            3.9
+            3.10
+            3.11
+            3.12
           architecture: ${{ matrix.platform.target }}
       - uses: actions/setup-python@v5
         if: runner.os != 'Windows'
         with:
-          python-version: 3.*
+          python-version: |
+            3.9
+            3.10
+            3.11
+            3.12
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -83,6 +99,14 @@ jobs:
         with:
           name: wheels-${{ matrix.platform.runner }}-${{ matrix.platform.manylinux }}-${{ matrix.platform.target }}
           path: dist
+      - name: Build conda package
+        if: matrix.platform.create-conda-package
+        uses: prefix-dev/rattler-build-action@v0.2.19
+        with:
+          upload-artifact: true
+          artifact-name: conda-${{ matrix.platform.runner }}-${{ matrix.platform.target }}
+          recipe-path: 'conda-recipe/recipe.yaml'
+          build-args: '--target-platform --experimental ${{ matrix.platform.target-platform }}'
 
   sdist:
     runs-on: ubuntu-latest
@@ -99,6 +123,7 @@ jobs:
           name: wheels-sdist
           path: dist
 
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -109,16 +134,30 @@ jobs:
       attestations: write
     steps:
       - uses: actions/checkout@v4
+      - name: Install rattler-build
+        run: |
+          mkdir -p ${{ runner.temp }}/rattler-build
+          curl -Ls \
+            https://github.com/prefix-dev/rattler-build/releases/latest/download/rattler-build-x86_64-unknown-linux-musl \
+            -o ${{ runner.temp }}/rattler-build/rattler-build
+          chmod +x ${{ runner.temp }}/rattler-build/rattler-build
+          echo ${{ runner.temp }}/rattler-build >> $GITHUB_PATH
       - uses: actions/download-artifact@v4
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-path: 'wheels-*/*'
-
+          subject-path: |
+            wheels-*/*
+            conda-*/*
       - name: Get project version
         id: 'pyproject_version'
         run: echo "version=v$(grep -m 1 version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)" >> $GITHUB_OUTPUT
-
+      - name: Publish to prefix.dev channel
+        run: |
+          for pkg in $(find conda-*/* -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
+            echo "Uploading ${pkg}"
+            rattler-build upload prefix -c terraquantumag "${pkg}" 
+          done
       - name: Publish to PyPI
         uses: PyO3/maturin-action@v1
         env:
