@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - .deps-recipes/winregistry
+      - conda-recipes/deps/winregistry
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       - name: Build conda package
         uses: prefix-dev/rattler-build-action@v0.2.19
         with:
-          recipe-path: '.deps-recipes/winregistry/recipe.yaml'
+          recipe-path: 'conda-recipes/deps/winregistry/recipe.yaml'
           build-args: '--target-platform win-64'
       - name: Publish to prefix.dev channel
         run: |

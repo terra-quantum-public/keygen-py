@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - .deps-recipes/py-machineid
+      - conda-recipes/deps/py-machineid
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       - name: Build conda package
         uses: prefix-dev/rattler-build-action@v0.2.19
         with:
-          recipe-path: '.deps-recipes/py-machineid/recipe.yaml'
+          recipe-path: 'conda-recipes/deps/py-machineid/recipe.yaml'
       - name: Publish to prefix.dev channel
         run: |
           for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
