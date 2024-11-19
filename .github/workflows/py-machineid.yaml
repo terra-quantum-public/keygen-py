@@ -1,0 +1,28 @@
+name: Release pymachineid
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .deps-recipes/py-machineid
+
+jobs:
+  build:
+    name: Release py-machineid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Build conda package
+        uses: prefix-dev/rattler-build-action@v0.2.19
+        with:
+          recipe-path: '.deps-recipes/py-machineid/recipe.yaml'
+      - name: Publish to prefix.dev channel
+        run: |
+          for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
+            echo "Uploading ${pkg}"
+            rattler-build upload prefix -c terraquantumag "${pkg}"
+          done

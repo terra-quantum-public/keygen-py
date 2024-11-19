@@ -16,7 +16,6 @@ build:
   number: 0
   skip: not win
   script:
-    - curl -o LICENSE https://github.com/shpaker/winregistry/blob/main/LICENSE
     - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:

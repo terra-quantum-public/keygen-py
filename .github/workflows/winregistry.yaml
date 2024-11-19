@@ -1,0 +1,32 @@
+name: Release winregistry
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .deps-recipes/winregistry
+
+jobs:
+  build:
+    name: Release winregistry
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Build conda package
+        uses: prefix-dev/rattler-build-action@v0.2.19
+        with:
+          recipe-path: '.deps-recipes/winregistry/recipe.yaml'
+          build-args: '--target-platform win-64'
+      - name: Publish to prefix.dev channel
+        run: |
+          $files = Get-ChildItem -Path output -Recurse -Include *.conda, *.tar.bz2
+          
+          foreach ($pkg in $files) {
+            Write-Output "Uploading $pkg"
+            rattler-build upload prefix -c terraquantumag $pkg
+          }
+        shell: pwsh
