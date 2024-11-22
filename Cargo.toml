@@ -3,9 +3,9 @@ name = "keygen-py"
 edition = "2021"
 
 [dependencies]
-keygen-rs = "0.2.2"
-pyo3 = { version = "0.21.2", features = ["extension-module"] }
-pyo3-async-runtimes = { version = "0.21.0", features = ["tokio-runtime"] }
+keygen-rs = "0.3.0"
+pyo3 = { version = "0.22.6", features = ["extension-module", "gil-refs"] }
+pyo3-async-runtimes = { version = "0.22.0", features = ["tokio-runtime"] }
 chrono = "0.4.38"
 openssl = { version = "0.10", features = ["vendored"] }
 

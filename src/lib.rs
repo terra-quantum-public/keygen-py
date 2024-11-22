@@ -1,20 +1,16 @@
-use crate::config::KeygenConfig;
-use pyo3::types::{PyList, PyModule};
-use pyo3::{pyfunction, pymodule, wrap_pyfunction, Bound, PyAny, PyResult, Python};
-use pyo3::exceptions::PyRuntimeError;
 use crate::license::{License, SchemeCode};
 use crate::utils::pylist_to_string_slice;
+use pyo3::exceptions::PyRuntimeError;
+use pyo3::prelude::PyModuleMethods;
+use pyo3::types::{PyList, PyModule};
+use pyo3::{pyfunction, pymodule, wrap_pyfunction, wrap_pymodule, Bound, PyAny, PyResult, Python};
 
 pub mod license;
-pub mod date;
-mod config;
+mod date;
+pub mod config;
 mod utils;
-
-#[pyfunction]
-fn set_config(config: KeygenConfig) -> PyResult<()> {
-    keygen_rs::config::set_config(config.into());
-    Ok(())
-}
+mod machine;
+mod entitlement;
 
 #[pyfunction]
 fn verify(scheme: SchemeCode, signed_key: &str) -> PyResult<String> {
@@ -25,6 +21,7 @@ fn verify(scheme: SchemeCode, signed_key: &str) -> PyResult<String> {
 }
 
 #[pyfunction]
+#[pyo3(signature = (fingerprints=None, entitlements=None))]
 fn validate<'a>(py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<'a, PyAny>> {
     let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty_bound(py));
     let entitlements = entitlements.unwrap_or_else(|| PyList::empty_bound(py));
@@ -46,11 +43,12 @@ fn validate<'a>(py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitle
 
 #[pymodule]
 fn keygen_sh(_: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(set_config, m)?)?;
+    m.add_wrapped(wrap_pymodule!(config::config_module))?;
+    m.add_wrapped(wrap_pymodule!(license::license_module))?;
+    m.add_wrapped(wrap_pymodule!(machine::machine_module))?;
+    m.add_wrapped(wrap_pymodule!(entitlement::entitlement_module))?;
+
     m.add_function(wrap_pyfunction!(validate, m)?)?;
     m.add_function(wrap_pyfunction!(verify, m)?)?;
-    m.add_class::<SchemeCode>()?;
-    m.add_class::<KeygenConfig>()?;
-    m.add_class::<License>()?;
     Ok(())
 }
