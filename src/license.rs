@@ -7,7 +7,7 @@ use keygen_rs::license::License as KeygenRsLicense;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
 use pyo3::types::PyList;
-
+use crate::license_file::LicenseFile;
 
 #[pymodule(name = "license")]
 pub fn license_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -217,9 +217,8 @@ impl License {
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
             let result = my_struct.inner.checkout(&keygen_rs::license::LicenseCheckoutOpts { ttl, include }).await;
             match result {
-                Ok(_lf) => {
-                    // TODO Need to implement this once we have licenseFile type
-                    Ok(())
+                Ok(lf) => {
+                    Ok(LicenseFile::from(lf))
                 },
                 Err(e) => {
                     Err(PyRuntimeError::new_err(e.to_string()))
