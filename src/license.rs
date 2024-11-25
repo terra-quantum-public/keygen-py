@@ -4,16 +4,16 @@ use crate::machine::Machine;
 use crate::utils::{create_interface, pylist_to_string_slice};
 use keygen_rs;
 use keygen_rs::license::License as KeygenRsLicense;
-use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
 use pyo3::types::PyList;
+use crate::errors::KeygenError;
 use crate::license_file::LicenseFile;
 
 #[pymodule(name = "license")]
 pub fn license_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Hack: workaround for https://github.com/PyO3/pyo3/issues/759
     Python::with_gil(|py| {
-        py.import_bound("sys")?
+        py.import("sys")?
             .getattr("modules")?
             .set_item("keygen_sh.license", m)
     })?;
@@ -75,8 +75,8 @@ impl License {
 
     #[pyo3(signature = (fingerprints=None, entitlements=None))]
     fn validate<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
-        let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty_bound(py));
-        let entitlements = entitlements.unwrap_or_else(|| PyList::empty_bound(py));
+        let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty(py));
+        let entitlements = entitlements.unwrap_or_else(|| PyList::empty(py));
 
         let fingerprints_vec = pylist_to_string_slice(fingerprints)?;
         let entitlements_vec = pylist_to_string_slice(entitlements)?;
@@ -86,17 +86,15 @@ impl License {
 
             match result {
                 Ok(license) => Ok(License::from(license)),
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }
 
     #[pyo3(signature = (fingerprints=None, entitlements=None))]
     fn validate_key<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
-        let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty_bound(py));
-        let entitlements = entitlements.unwrap_or_else(|| PyList::empty_bound(py));
+        let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty(py));
+        let entitlements = entitlements.unwrap_or_else(|| PyList::empty(py));
 
         let fingerprints_vec = pylist_to_string_slice(fingerprints)?;
         let entitlements_vec = pylist_to_string_slice(entitlements)?;
@@ -106,9 +104,7 @@ impl License {
 
             match result {
                 Ok(license) => Ok(License::from(license)),
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }
@@ -116,9 +112,7 @@ impl License {
     fn verify(&self) -> PyResult<Vec<u8>> {
         match self.inner.verify() {
             Ok(resp) => Ok(resp),
-            Err(e) => {
-                Err(PyRuntimeError::new_err(e.to_string()))
-            },
+            Err(e) => Err(KeygenError::from_error(e)),
         }
     }
 
@@ -130,9 +124,7 @@ impl License {
             let result = my_struct.inner.activate(&fingerprint, &[]).await;
             match result {
                 Ok(machine) => Ok(Machine::from(machine)),
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }
@@ -144,9 +136,7 @@ impl License {
             let result = my_struct.inner.deactivate(&id).await;
             match result {
                 Ok(()) => Ok(()),
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }
@@ -157,12 +147,8 @@ impl License {
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
             let result = my_struct.inner.machine(&id).await;
             match result {
-                Ok(machine) => {
-                    Ok(Machine::from(machine))
-                },
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Ok(machine) => Ok(Machine::from(machine)),
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }
@@ -178,9 +164,7 @@ impl License {
                         Machine::from(m.clone())
                     }).collect::<Vec<Machine>>())
                 },
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }
@@ -203,9 +187,7 @@ impl License {
                         )
                     }).collect::<Vec<Entitlement>>())
                 },
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }
@@ -220,9 +202,7 @@ impl License {
                 Ok(lf) => {
                     Ok(LicenseFile::from(lf))
                 },
-                Err(e) => {
-                    Err(PyRuntimeError::new_err(e.to_string()))
-                },
+                Err(e) => Err(KeygenError::from_error(e)),
             }
         })
     }

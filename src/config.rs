@@ -7,7 +7,7 @@ use pyo3::{pyclass, pyfunction, pymethods, pymodule, wrap_pyfunction, Bound, PyR
 pub fn config_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Hack: workaround for https://github.com/PyO3/pyo3/issues/759
     Python::with_gil(|py| {
-        py.import_bound("sys")?
+        py.import("sys")?
             .getattr("modules")?
             .set_item("keygen_sh.config", m)
     })?;

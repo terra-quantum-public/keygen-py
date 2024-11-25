@@ -1,12 +1,18 @@
 use chrono::{DateTime, Utc};
-use pyo3::{IntoPy, Py, PyAny, PyObject, Python};
+use pyo3::types::PyString;
+use pyo3::{Bound, IntoPyObject, PyErr, Python};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Date(DateTime<Utc>);
 
-impl IntoPy<Py<PyAny>> for Date {
-    fn into_py(self, py: Python<'_>) -> PyObject {
-        self.0.to_rfc3339().into_py(py)
+impl<'py> IntoPyObject<'py> for Date {
+    type Target = PyString;
+    type Output = Bound<'py, Self::Target>;
+    type Error = PyErr;
+
+    fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
+        let date_str = self.0.to_rfc3339();
+        Ok(PyString::new(py, &date_str))
     }
 }
 

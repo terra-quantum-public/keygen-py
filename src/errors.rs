@@ -9,7 +9,7 @@ create_exception!(errors_module, KeygenError, PyException);
 #[pymodule]
 #[pyo3(name = "_errors")]
 pub fn errors_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add("KeygenError", m.py().get_type_bound::<KeygenError>())?;
+    m.add("KeygenError", m.py().get_type::<KeygenError>())?;
     Ok(())
 }
 

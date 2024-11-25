@@ -5,6 +5,15 @@ use pyo3::types::{PyList, PyModule};
 use pyo3::{pyfunction, pymodule, wrap_pyfunction, wrap_pymodule, Bound, PyAny, PyResult, Python};
 use crate::errors::KeygenError;
 
+// These are the mods which are exposed from the keygen-rs lib:
+// pub mod component;
+// pub mod config;
+// pub mod errors;
+// pub mod license;
+// pub mod license_file;
+// pub mod machine;
+// pub mod machine_file;
+
 pub(crate) mod date;
 pub(crate) mod utils;
 pub mod config;
@@ -13,6 +22,7 @@ pub mod license;
 pub mod license_file;
 pub mod machine;
 pub mod errors;
+pub mod component;
 
 #[pyfunction]
 fn verify(scheme: SchemeCode, signed_key: &str) -> PyResult<String> {
@@ -25,8 +35,8 @@ fn verify(scheme: SchemeCode, signed_key: &str) -> PyResult<String> {
 #[pyfunction]
 #[pyo3(signature = (fingerprints=None, entitlements=None))]
 fn validate<'a>(py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<'a, PyAny>> {
-    let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty_bound(py));
-    let entitlements = entitlements.unwrap_or_else(|| PyList::empty_bound(py));
+    let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty(py));
+    let entitlements = entitlements.unwrap_or_else(|| PyList::empty(py));
 
     let fingerprints_vec = pylist_to_string_slice(fingerprints)?;
     let entitlements_vec = pylist_to_string_slice(entitlements)?;
@@ -36,9 +46,7 @@ fn validate<'a>(py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitle
 
         match result {
             Ok(license) => Ok(License::from(license)),
-            Err(e) => {
-                Err(KeygenError::from_error(e))
-            },
+            Err(e) => Err(KeygenError::from_error(e)),
         }
     })
 }
@@ -51,6 +59,7 @@ fn keygen_sh(_: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_wrapped(wrap_pymodule!(entitlement::entitlement_module))?;
     m.add_wrapped(wrap_pymodule!(license_file::license_file_module))?;
     m.add_wrapped(wrap_pymodule!(errors::errors_module))?;
+    m.add_wrapped(wrap_pymodule!(component::component_module))?;
 
     m.add_function(wrap_pyfunction!(validate, m)?)?;
     m.add_function(wrap_pyfunction!(verify, m)?)?;
