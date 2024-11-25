@@ -734,6 +734,7 @@ dependencies = [
  "openssl",
  "pyo3",
  "pyo3-async-runtimes",
+ "serde_json",
 ]
 
 [[package]]

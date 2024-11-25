@@ -8,6 +8,7 @@ pyo3 = { version = "0.22.6", features = ["extension-module", "gil-refs"] }
 pyo3-async-runtimes = { version = "0.22.0", features = ["tokio-runtime"] }
 chrono = "0.4.38"
 openssl = { version = "0.10", features = ["vendored"] }
+serde_json = "1.0.132"
 
 [lib]
 name = "keygen_sh"
