@@ -1,8 +1,8 @@
-use pyo3::{pyclass, pymethods, pymodule, Bound, IntoPy, PyResult, Python};
-use pyo3::prelude::{PyAnyMethods, PyModule, PyModuleMethods};
+use crate::date::Date;
 use crate::utils::create_interface;
 use keygen_rs::machine::Machine as KeygenRsMachine;
-use crate::date::Date;
+use pyo3::prelude::{PyAnyMethods, PyModule, PyModuleMethods};
+use pyo3::{pyclass, pymethods, pymodule, Bound, PyResult, Python};
 
 #[pymodule(name = "machine")]
 pub fn machine_module(m: &Bound<'_, PyModule>) -> PyResult<()> {

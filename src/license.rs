@@ -1,12 +1,13 @@
 use crate::date::Date;
+use crate::entitlement::Entitlement;
 use crate::machine::Machine;
 use crate::utils::{create_interface, pylist_to_string_slice};
 use keygen_rs;
 use keygen_rs::license::License as KeygenRsLicense;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
-use pyo3::types::{PyInt, PyList};
-use crate::entitlement::Entitlement;
+use pyo3::types::PyList;
+
 
 #[pymodule(name = "license")]
 pub fn license_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -73,14 +74,14 @@ impl License {
     }
 
     #[pyo3(signature = (fingerprints=None, entitlements=None))]
-    fn validate<'a>(&self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
+    fn validate<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
         let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty_bound(py));
         let entitlements = entitlements.unwrap_or_else(|| PyList::empty_bound(py));
 
         let fingerprints_vec = pylist_to_string_slice(fingerprints)?;
         let entitlements_vec = pylist_to_string_slice(entitlements)?;
 
-        pyo3_async_runtimes::tokio::future_into_py::<License>(py, async move {
+        pyo3_async_runtimes::tokio::future_into_py(py, async move {
             let result = keygen_rs::validate(&fingerprints_vec, &entitlements_vec).await;
 
             match result {
@@ -93,14 +94,14 @@ impl License {
     }
 
     #[pyo3(signature = (fingerprints=None, entitlements=None))]
-    fn validate_key<'a>(&self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
+    fn validate_key<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
         let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty_bound(py));
         let entitlements = entitlements.unwrap_or_else(|| PyList::empty_bound(py));
 
         let fingerprints_vec = pylist_to_string_slice(fingerprints)?;
         let entitlements_vec = pylist_to_string_slice(entitlements)?;
 
-        pyo3_async_runtimes::tokio::future_into_py::<License>(py, async move {
+        pyo3_async_runtimes::tokio::future_into_py(py, async move {
             let result = keygen_rs::validate(&fingerprints_vec, &entitlements_vec).await;
 
             match result {
@@ -121,13 +122,14 @@ impl License {
         }
     }
 
-    fn activate(&self, py: Python, fingerprint: String, components: Bound<PyList<PyAny>>) -> PyResult<Bound<PyAny>> {
+    fn activate<'a>(&'a self, py: Python<'a>, fingerprint: String, _components: Bound<PyList>) -> PyResult<Bound<PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
-            let result = my_struct.inner.activate(&fingerprint, &components).await;
+            // TODO: pass through components
+            let result = my_struct.inner.activate(&fingerprint, &[]).await;
             match result {
-                Ok((machine)) => Ok(Machine::from(machine)),
+                Ok(machine) => Ok(Machine::from(machine)),
                 Err(e) => {
                     Err(PyRuntimeError::new_err(e.to_string()))
                 },
@@ -135,10 +137,10 @@ impl License {
         })
     }
 
-    fn deactivate(&self, py: Python, id: String) -> PyResult<Bound<PyAny>> {
+    fn deactivate<'a>(&'a self, py: Python<'a>, id: String) -> PyResult<Bound<PyAny>> {
         let my_struct = self.clone();
 
-        pyo3_async_runtimes::tokio::future_into_py::<()>(py, async move {
+        pyo3_async_runtimes::tokio::future_into_py(py, async move {
             let result = my_struct.inner.deactivate(&id).await;
             match result {
                 Ok(()) => Ok(()),
@@ -149,7 +151,7 @@ impl License {
         })
     }
 
-    fn machine(&self, py: Python, id: String) -> PyResult<Bound<PyAny>> {
+    fn machine<'a>(&'a self, py: Python<'a>, id: String) -> PyResult<Bound<PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -165,16 +167,16 @@ impl License {
         })
     }
 
-    fn machines(&self, py: Python) -> PyResult<Bound<PyAny>> {
+    fn machines<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<PyAny>> {
         let my_struct = self.clone();
 
-        pyo3_async_runtimes::tokio::future_into_py::<Machine>>(py, async move {
+        pyo3_async_runtimes::tokio::future_into_py(py, async move {
             let result = my_struct.inner.machines().await;
             match result {
                 Ok(machines) => {
                     Ok(machines.iter().map(|m| {
                         Machine::from(m.clone())
-                    }).collect())
+                    }).collect::<Vec<Machine>>())
                 },
                 Err(e) => {
                     Err(PyRuntimeError::new_err(e.to_string()))
@@ -183,7 +185,7 @@ impl License {
         })
     }
 
-    fn entitlements(&self, py: Python) -> PyResult<Bound<PyAny>> {
+    fn entitlements<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -199,7 +201,7 @@ impl License {
                             e.created,
                             e.updated
                         )
-                    }).collect())
+                    }).collect::<Vec<Entitlement>>())
                 },
                 Err(e) => {
                     Err(PyRuntimeError::new_err(e.to_string()))
@@ -208,13 +210,14 @@ impl License {
         })
     }
 
-    fn checkout(&self, py: Python, ttl: Option<i64>, include: Option<Vec<String>>) -> PyResult<Bound<PyAny>> {
+    #[pyo3(signature = (ttl=None, include=None))]
+    fn checkout<'a>(&'a self, py: Python<'a>, ttl: Option<i64>, include: Option<Vec<String>>) -> PyResult<Bound<PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
             let result = my_struct.inner.checkout(&keygen_rs::license::LicenseCheckoutOpts { ttl, include }).await;
             match result {
-                Ok(lf) => {
+                Ok(_lf) => {
                     // TODO Need to implement this once we have licenseFile type
                     Ok(())
                 },

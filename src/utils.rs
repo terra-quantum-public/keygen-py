@@ -1,6 +1,5 @@
 use pyo3::types::{PyAnyMethods, PyList, PyListMethods};
-use pyo3::{pyclass, Bound, PyResult};
-use crate::machine::Machine;
+use pyo3::{Bound, PyResult};
 
 pub fn pylist_to_string_slice(pylist: Bound<PyList>) -> PyResult<Vec<String>> {
     let mut strings = Vec::new();

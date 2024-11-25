@@ -1,7 +1,6 @@
 use chrono::{DateTime, Utc};
-use keygen_rs;
-use pyo3::{pyclass, pymodule, Bound, PyResult, Python};
 use pyo3::prelude::{PyAnyMethods, PyModule, PyModuleMethods};
+use pyo3::{pyclass, pymodule, Bound, PyResult, Python};
 
 #[pymodule(name = "entitlement")]
 pub fn entitlement_module(m: &Bound<'_, PyModule>) -> PyResult<()> {

@@ -5,12 +5,13 @@ use pyo3::prelude::PyModuleMethods;
 use pyo3::types::{PyList, PyModule};
 use pyo3::{pyfunction, pymodule, wrap_pyfunction, wrap_pymodule, Bound, PyAny, PyResult, Python};
 
-pub mod license;
-mod date;
+pub(crate) mod date;
+pub(crate) mod utils;
 pub mod config;
-mod utils;
-mod machine;
-mod entitlement;
+pub mod entitlement;
+pub mod license;
+pub mod license_file;
+pub mod machine;
 
 #[pyfunction]
 fn verify(scheme: SchemeCode, signed_key: &str) -> PyResult<String> {
@@ -47,6 +48,7 @@ fn keygen_sh(_: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_wrapped(wrap_pymodule!(license::license_module))?;
     m.add_wrapped(wrap_pymodule!(machine::machine_module))?;
     m.add_wrapped(wrap_pymodule!(entitlement::entitlement_module))?;
+    m.add_wrapped(wrap_pymodule!(license_file::license_file_module))?;
 
     m.add_function(wrap_pyfunction!(validate, m)?)?;
     m.add_function(wrap_pyfunction!(verify, m)?)?;
