@@ -28,5 +28,23 @@ macro_rules! create_interface {
     };
 }
 
-// Export the macro so it can be used in other modules
+macro_rules! create_interface_no_clone {
+    ($name: ident, $type: ident) => {
+        #[pyclass(frozen)]
+        #[derive(Debug)]
+        pub struct $name {
+            inner: $type,
+        }
+
+        impl $name {
+            pub(crate) fn from(origin: $type) -> Self {
+                Self {
+                    inner: origin,
+                }
+            }
+        }
+    };
+}
+
 pub(crate) use create_interface;
+pub(crate) use create_interface_no_clone;

@@ -1,7 +1,9 @@
 use crate::date::Date;
-use crate::utils::create_interface;
+use crate::utils::{create_interface, create_interface_no_clone};
 use keygen_rs::license_file::LicenseFile as KeygenRsLicenseFile;
+use keygen_rs::license_file::LicenseFileDataset as KeygenRsLicenseFileDataset;
 use pyo3::prelude::*;
+use crate::certificate::Certificate;
 use crate::errors::KeygenError;
 
 #[pymodule(name = "license_file")]
@@ -18,6 +20,7 @@ pub fn license_file_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 }
 
 create_interface!(LicenseFile, KeygenRsLicenseFile);
+create_interface_no_clone!(LicenseFileDataset, KeygenRsLicenseFileDataset);
 
 #[pymethods]
 impl LicenseFile {
@@ -61,18 +64,16 @@ impl LicenseFile {
         }
     }
 
-    // TODO proper return LicenseFileDataset
-    fn decrypt(&self, key: String) -> PyResult<()> {
+    fn decrypt(&self, key: String) -> PyResult<LicenseFileDataset> {
         match self.inner.decrypt(&key) {
-            Ok(_) => Ok(()),
+            Ok(lfd) => Ok(LicenseFileDataset::from(lfd)),
             Err(e) => Err(KeygenError::from_error(e)),
         }
     }
 
-    // TODO proper return Certificate
-    fn parse_certificate(&self) -> PyResult<()> {
+    fn parse_certificate(&self) -> PyResult<Certificate> {
         match self.inner.certificate() {
-            Ok(_) => Ok(()),
+            Ok(c) => Ok(Certificate::build(c.enc, c.sig, c.alg)),
             Err(e) => Err(KeygenError::from_error(e)),
         }
     }

@@ -6,6 +6,7 @@ use keygen_rs;
 use keygen_rs::license::License as KeygenRsLicense;
 use pyo3::prelude::*;
 use pyo3::types::PyList;
+use crate::component::Component;
 use crate::errors::KeygenError;
 use crate::license_file::LicenseFile;
 
@@ -116,12 +117,15 @@ impl License {
         }
     }
 
-    fn activate<'a>(&'a self, py: Python<'a>, fingerprint: String, _components: Bound<PyList>) -> PyResult<Bound<PyAny>> {
+    fn activate<'a>(&'a self, py: Python<'a>, fingerprint: String, components: Vec<Component>) -> PyResult<Bound<PyAny>> {
         let my_struct = self.clone();
+        let components = components.iter().map(|c| {
+            c.clone().into()
+        }).collect::<Vec<keygen_rs::component::Component>>();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
             // TODO: pass through components
-            let result = my_struct.inner.activate(&fingerprint, &[]).await;
+            let result = my_struct.inner.activate(&fingerprint, &components).await;
             match result {
                 Ok(machine) => Ok(Machine::from(machine)),
                 Err(e) => Err(KeygenError::from_error(e)),

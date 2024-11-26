@@ -1,4 +1,3 @@
-use pyo3::BoundObject;
 use pyo3::prelude::*;
 use pyo3::types::{PyBool, PyDict, PyList, PyNone, PyString};
 use serde_json::Value;
