@@ -31,7 +31,7 @@ keygen-py = "0.1.0"
 Use `KeygenConfig` to configure the SDK globally. Set this before making any API calls.
 
 ```python
-from keygen_sh import set_config, KeygenConfig
+from keygen_sh.config import set_config, KeygenConfig
 
 set_config(KeygenConfig(
     api_url="https://api.keygen.sh",
@@ -70,7 +70,8 @@ if __name__ == '__main__':
 To verify a signed license key offline, use the following:
 
 ```python
-from keygen_sh import verify, SchemeCode
+from keygen_sh import verify
+from keygen_sh.license import SchemeCode
 
 data = verify(SchemeCode.Ed25519Sign, "A_KEYGEN_LICENSE_KEY")
 
