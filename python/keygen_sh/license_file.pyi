@@ -1,22 +1,20 @@
+import datetime
+
 from keygen_sh import License
 from keygen_sh.certificate import Certificate
 
 
 class LicenseFileDataset:
     license: License
-    # TODO: Date
-    issued: str
-    # TODO: Date
-    expiry: str
+    issued: datetime.datetime
+    expiry: datetime.datetime
     ttl: int
 
 class LicenseFile:
     id: str
     certificate: str
-    # TODO: Date
-    issued: str
-    # TODO: Date
-    expiry: str
+    issued: datetime.datetime
+    expiry: datetime.datetime
     ttl: int
 
     @staticmethod

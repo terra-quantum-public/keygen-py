@@ -1,3 +1,4 @@
+import datetime
 from enum import Enum, auto
 from typing import Optional, List
 
@@ -12,7 +13,7 @@ class License:
     scheme: SchemeCode
     key: str
     name: Optional[str]
-    expiry: Optional[str]
+    expiry: Optional[datetime.datetime]
     status: Optional[str]
     policy: Optional[str]
 

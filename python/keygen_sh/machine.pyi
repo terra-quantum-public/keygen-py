@@ -1,7 +1,7 @@
+import datetime
 from typing import Optional, List
 
 from keygen_sh.machine_file import MachineFile
-
 
 class Machine:
     id: str
@@ -13,8 +13,8 @@ class Machine:
     require_heartbeat: bool
     heartbeat_status: str
     heartbeat_duration: Optional[int]
-    created: str
-    updated: str
+    created: datetime.datetime
+    updated: datetime.datetime
 
     async def deactivate(self) -> None:
         """

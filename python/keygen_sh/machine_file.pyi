@@ -1,3 +1,5 @@
+import datetime
+
 from keygen_sh import License
 from keygen_sh.certificate import Certificate
 from keygen_sh.machine import Machine
@@ -5,18 +7,16 @@ from keygen_sh.machine import Machine
 class MachineFileDataset:
     license: License
     machine: Machine
-    issued: str
-    expiry: str
+    issued: datetime.datetime
+    expiry: datetime.datetime
     ttl: int
 
 
 class MachineFile:
     id: str
     certificate: str
-    # date
-    issued: str
-    # date
-    expiry: str
+    issued: datetime.datetime
+    expiry: datetime.datetime
     ttl: int
 
     @staticmethod
