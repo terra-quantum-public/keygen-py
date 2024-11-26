@@ -13,7 +13,7 @@ impl<'py> IntoPyObject<'py> for Date {
     fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
         let datetime = self.0;
 
-        Ok(PyDateTime::new(
+        PyDateTime::new(
             py,
             datetime.year(),
             datetime.month() as u8,
@@ -23,8 +23,7 @@ impl<'py> IntoPyObject<'py> for Date {
             datetime.second() as u8,
             datetime.timestamp_subsec_micros(),
             None
-        )?
-        .into())
+        )
     }
 }
 

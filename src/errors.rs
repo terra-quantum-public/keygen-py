@@ -19,7 +19,7 @@ impl KeygenError {
             Error::UnexpectedError(detail) => {
                 let info = json!({ "type": "UnexpectedError", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::InvalidUrl => {
@@ -33,13 +33,13 @@ impl KeygenError {
             Error::DecryptionError(detail) => {
                 let info = json!({ "type": "DecryptionError", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::RateLimitExceeded { window, count, limit, remaining, reset, retry_after } => {
                 let info = json!({ "type": "RateLimitExceeded", "details": { "window": window, "count" : count, "limit": limit, "remaining": remaining, "reset": reset, "retry_after": retry_after } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseKeyMissing => {
@@ -77,19 +77,19 @@ impl KeygenError {
             Error::CerificateFileInvalid(detail) => {
                 let info = json!({ "type": "CerificateFileInvalid", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::CertificateFileNotGenuine(detail) => {
                 let info = json!({ "type": "CertificateFileNotGenuine", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::CertificateFileNotSupported(detail) => {
                 let info = json!({ "type": "CertificateFileNotSupported", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::CerificateFileExpired => {
@@ -99,19 +99,19 @@ impl KeygenError {
             Error::LicenseFileInvalid(detail) => {
                 let info = json!({ "type": "LicenseFileInvalid", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseFileNotGenuine(detail) => {
                 let info = json!({ "type": "LicenseFileNotGenuine", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseFileNotSupported(detail) => {
                 let info = json!({ "type": "LicenseFileNotSupported", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseFileNotEncrypted => {
@@ -121,31 +121,31 @@ impl KeygenError {
             Error::LicenseFileExpired(detail) => {
                 let info = json!({ "type": "LicenseFileExpired", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::MachineFileInvalid(detail) => {
                 let info = json!({ "type": "MachineFileInvalid", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::MachineFileNotGenuine(detail) => {
                 let info = json!({ "type": "MachineFileNotGenuine", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::MachineFileNotSupported(detail) => {
                 let info = json!({ "type": "MachineFileNotSupported", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::MachineFileExpired(detail) => {
                 let info = json!({ "type": "MachineFileExpired", "details": detail });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::KeygenApiError {code, detail, body} => {
@@ -155,13 +155,13 @@ impl KeygenError {
                     "body": body
                 } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::TokenNotAllowed { detail, code } => {
                 let info = json!({ "type": "TokenNotAllowed", "details": { "detail": detail, "code": code } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::TokenFormatInvalid {code, detail} => {
@@ -179,67 +179,67 @@ impl KeygenError {
             Error::LicenseSuspended { code, detail } => {
                 let info = json!({ "type": "LicenseSuspended", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseExpired { detail, code } => {
                 let info = json!({ "type": "LicenseExpired", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseNotAllowed { detail, code } => {
                 let info = json!({ "type": "LicenseNotAllowed", "details": { "detail": detail, "code": code } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseNotActivated { code, detail, license } => {
                 let info = json!({ "type": "LicenseNotActivated", "details": { "detail": detail, "code": code, "license": license } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseKeyInvalid { detail, code } => {
                 let info = json!({ "type": "LicenseKeyInvalid", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseTokenInvalid { detail, code } => {
                 let info = json!({ "type": "LicenseTokenInvalid", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseTooManyMachines { detail, code } => {
                 let info = json!({ "type": "LicenseTooManyMachines", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseTooManyCores { code, detail } => {
                 let info = json!({ "type": "LicenseTooManyCores", "details": { "detail": detail, "code": code  }});
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::LicenseTooManyProcesses { detail, code } => {
                 let info = json!({ "type": "LicenseTooManyProcesses", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::MachineAlreadyActivated { detail, code } => {
                 let info = json!({ "type": "MachineAlreadyActivated", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::MachineLimitExceeded { detail, code} => {
                 let info = json!({ "type": "MachineLimitExceeded", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::MachineNotFound => {
@@ -249,7 +249,7 @@ impl KeygenError {
             Error::ProcessLimitExceeded { detail, code } => {
                 let info = json!({ "type": "ProcessLimitExceeded", "details": {"detail": detail, "code": code } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::ProcessNotFound => {
@@ -259,55 +259,55 @@ impl KeygenError {
             Error::ComponentConflict { code, detail } => {
                 let info = json!({ "type": "ComponentConflict", "details": { "detail": detail, "code": code } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::ComponentAlreadyActivated { code, detail } => {
                 let info = json!({ "type": "ComponentAlreadyActivated", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::ComponentNotActivated { code, detail } => {
                 let info = json!({ "type": "ComponentNotActivated", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::EnvironmentError { code, detail } => {
                 let info = json!({ "type": "EnvironmentError", "details": { "detail": detail, "code": code } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::HeartbeatDead { code, detail } => {
                 let info = json!({ "type": "HeartbeatDead", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::HeartbeatPingFailed { code, detail } => {
                 let info = json!({ "type": "HeartbeatPingFailed", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::HeartbeatRequired { code, detail } => {
                 let info = json!({ "type": "HeartbeatRequired", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::ValidationFingerprintMissing { code, detail } => {
                 let info = json!({ "type": "ValidationFingerprintMissing", "details": { "detail": detail, "code": code  } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             Error::ValidationComponentsMissing { code, detail } => {
                 let info = json!({ "type": "ValidationComponentsMissing", "details": { "detail": detail, "code": code } });
                 serde_json::to_string(&info)
-                    .map(|s| KeygenError::new_err(s))
+                    .map(KeygenError::new_err)
                     .unwrap_or_else(|_| KeygenError::new_err("Serialization error"))
             }
             _ => {

@@ -1,5 +1,4 @@
 use pyo3::prelude::*;
-use crate::utils::create_interface;
 use keygen_rs::component::Component as KeygenRsComponent;
 use crate::json::JsonValue;
 
@@ -16,7 +15,11 @@ pub fn component_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     Ok(())
 }
 
-create_interface!(Component, KeygenRsComponent);
+#[pyclass(frozen)]
+#[derive(Debug, Clone)]
+pub struct Component {
+    inner: KeygenRsComponent,
+}
 
 #[pymethods]
 impl Component {
@@ -48,12 +51,8 @@ impl Component {
     }
 }
 
-impl Into<KeygenRsComponent> for Component {
-    fn into(self) -> KeygenRsComponent {
-        KeygenRsComponent {
-            id: self.inner.id,
-            fingerprint: self.inner.fingerprint,
-            name: self.inner.name,
-        }
+impl From<Component> for KeygenRsComponent {
+    fn from(c: Component) -> KeygenRsComponent {
+        c.inner
     }
 }

@@ -90,6 +90,7 @@ impl Machine {
         })
     }
 
+    #[pyo3(signature = (ttl=None, include=None))]
     fn checkout<'a>(
         &'a self,
         py: Python<'a>,
