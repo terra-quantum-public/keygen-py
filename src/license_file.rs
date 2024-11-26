@@ -5,6 +5,7 @@ use keygen_rs::license_file::LicenseFileDataset as KeygenRsLicenseFileDataset;
 use pyo3::prelude::*;
 use crate::certificate::Certificate;
 use crate::errors::KeygenError;
+use crate::license::License;
 
 #[pymodule(name = "license_file")]
 pub fn license_file_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -16,6 +17,7 @@ pub fn license_file_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     })?;
 
     m.add_class::<LicenseFile>()?;
+    m.add_class::<LicenseFileDataset>()?;
     Ok(())
 }
 
@@ -25,33 +27,33 @@ create_interface_no_clone!(LicenseFileDataset, KeygenRsLicenseFileDataset);
 #[pymethods]
 impl LicenseFile {
     #[getter]
-    pub fn id(&self) -> PyResult<String> {
+    fn id(&self) -> PyResult<String> {
         Ok(self.inner.id.clone())
     }
 
     #[getter]
-    pub fn certificate(&self) -> PyResult<String> {
+    fn certificate(&self) -> PyResult<String> {
         Ok(self.inner.certificate.clone())
     }
 
     #[getter]
-    pub fn issued(&self) -> PyResult<Date> {
+    fn issued(&self) -> PyResult<Date> {
         Ok(Date::from(self.inner.issued))
     }
 
     #[getter]
-    pub fn expiry(&self) -> PyResult<Date> {
+    fn expiry(&self) -> PyResult<Date> {
         Ok(Date::from(self.inner.expiry))
     }
 
     #[getter]
-    pub fn ttl(&self) -> PyResult<i32> {
+    fn ttl(&self) -> PyResult<i32> {
         Ok(self.inner.ttl)
     }
 
     #[staticmethod]
-    fn build_from_cert(test: String, content: String) -> PyResult<Self> {
-        match KeygenRsLicenseFile::from_cert(&test, &content) {
+    fn build_from_cert(key: String, content: String) -> PyResult<Self> {
+        match KeygenRsLicenseFile::from_cert(&key, &content) {
             Ok(lf) => Ok(Self { inner: lf }),
             Err(e) => Err(KeygenError::from_error(e))
         }
@@ -71,10 +73,33 @@ impl LicenseFile {
         }
     }
 
-    fn parse_certificate(&self) -> PyResult<Certificate> {
+    fn build_cert(&self) -> PyResult<Certificate> {
         match self.inner.certificate() {
             Ok(c) => Ok(Certificate::build(c.enc, c.sig, c.alg)),
             Err(e) => Err(KeygenError::from_error(e)),
         }
+    }
+}
+
+#[pymethods]
+impl LicenseFileDataset {
+    #[getter]
+    fn license(&self) -> PyResult<License> {
+        Ok(License::from(self.inner.license.clone()))
+    }
+
+    #[getter]
+    fn issued(&self) -> PyResult<Date> {
+        Ok(Date::from(self.inner.issued))
+    }
+
+    #[getter]
+    fn expiry(&self) -> PyResult<Date> {
+        Ok(Date::from(self.inner.expiry))
+    }
+
+    #[getter]
+    fn ttl(&self) -> PyResult<i32> {
+        Ok(self.inner.ttl)
     }
 }

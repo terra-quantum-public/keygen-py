@@ -21,28 +21,28 @@ create_interface!(Component, KeygenRsComponent);
 #[pymethods]
 impl Component {
     #[new]
-    pub fn new(id: String, fingerprint: String, name: String) -> Self {
+    fn new(id: String, fingerprint: String, name: String) -> Self {
         Self {
             inner: KeygenRsComponent { id, fingerprint, name }
         }
     }
 
     #[getter]
-    pub fn id(&self) -> PyResult<String> {
+    fn id(&self) -> PyResult<String> {
         Ok(self.inner.id.clone())
     }
 
     #[getter]
-    pub fn fingerprint(&self) -> PyResult<String> {
+    fn fingerprint(&self) -> PyResult<String> {
         Ok(self.inner.fingerprint.clone())
     }
 
     #[getter]
-    pub fn name(&self) -> PyResult<String> {
+    fn name(&self) -> PyResult<String> {
         Ok(self.inner.name.clone())
     }
 
-    pub fn create_object(&self) -> PyResult<JsonValue> {
+    fn create_object(&self) -> PyResult<JsonValue> {
         let object = KeygenRsComponent::create_object(&self.inner);
         Ok(JsonValue(object))
     }

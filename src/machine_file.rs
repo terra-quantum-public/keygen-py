@@ -19,6 +19,7 @@ pub fn machine_file_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     })?;
 
     m.add_class::<MachineFile>()?;
+    m.add_class::<MachineFileDataset>()?;
     Ok(())
 }
 
@@ -53,28 +54,28 @@ impl MachineFile {
     }
     
     #[staticmethod]
-    pub fn from_cert(key: String, content: String) -> PyResult<Self> {
+    fn from_cert(key: String, content: String) -> PyResult<Self> {
         match KeygenRsMachineFile::from_cert(&key, &content) {
             Ok(mf) => Ok(MachineFile::from(mf)),
             Err(e) => Err(KeygenError::from_error(e)),
         }
     }
 
-    pub fn verify(&self) -> PyResult<()> {
+    fn verify(&self) -> PyResult<()> {
         match self.inner.verify() {
             Ok(_) => Ok(()),
             Err(e) => Err(KeygenError::from_error(e)),
         }
     }
 
-    pub fn decrypt(&self, key: String) -> PyResult<MachineFileDataset> {
+    fn decrypt(&self, key: String) -> PyResult<MachineFileDataset> {
         match self.inner.decrypt(&key) {
             Ok(mfd) => Ok(MachineFileDataset::from(mfd)),
             Err(e) => Err(KeygenError::from_error(e)),
         }
     }
 
-    pub fn build_certificate(&self) -> PyResult<Certificate> {
+    fn build_certificate(&self) -> PyResult<Certificate> {
         match self.inner.certificate() {
             Ok(mfd) => Ok(Certificate::build(mfd.enc, mfd.sig, mfd.alg)),
             Err(e) => Err(KeygenError::from_error(e)),

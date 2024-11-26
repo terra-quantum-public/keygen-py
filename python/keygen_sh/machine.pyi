@@ -1,4 +1,7 @@
-from typing import Optional
+from typing import Optional, List
+
+from keygen_sh.machine_file import MachineFile
+
 
 class Machine:
     id: str
@@ -12,3 +15,28 @@ class Machine:
     heartbeat_duration: Optional[int]
     created: str
     updated: str
+
+    async def deactivate(self) -> None:
+        """
+        Deactivate given machine.
+        """
+        ...
+
+    async def checkout(self, ttl: Optional[int], include: Optional[List[str]]) -> MachineFile:
+        """
+        Checkout given machine.
+        """
+        ...
+
+    async def ping(self) -> Machine:
+        """
+        Ping given machine.
+        """
+        ...
+
+    # TODO: Needs to be properly defined and implemented
+    async def monitor(self) -> None:
+        """
+        Ping given machine.
+        """
+        ...

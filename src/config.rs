@@ -19,13 +19,13 @@ pub fn config_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 }
 
 #[pyfunction]
-pub fn set_config(config: KeygenConfig) -> PyResult<()> {
+fn set_config(config: KeygenConfig) -> PyResult<()> {
     keygen_rs::config::set_config(config.into());
     Ok(())
 }
 
 #[pyfunction]
-pub fn get_config() -> PyResult<KeygenConfig> {
+fn get_config() -> PyResult<KeygenConfig> {
     Ok(KeygenConfig {
         inner: keygen_rs::config::get_config(),
     })
@@ -43,7 +43,7 @@ impl KeygenConfig {
     )]
     #[new]
     #[allow(clippy::too_many_arguments)]
-    pub fn new(api_url: String,
+    fn new(api_url: String,
                api_version: String,
                api_prefix: String,
                account: String,
@@ -77,67 +77,67 @@ impl KeygenConfig {
     }
 
     #[getter]
-    pub fn api_url(&self) -> PyResult<String> {
+    fn api_url(&self) -> PyResult<String> {
         Ok(self.inner.api_url.clone())
     }
 
     #[getter]
-    pub fn api_version(&self) -> PyResult<String> {
+    fn api_version(&self) -> PyResult<String> {
         Ok(self.inner.api_version.clone())
     }
 
     #[getter]
-    pub fn api_prefix(&self) -> PyResult<String> {
+    fn api_prefix(&self) -> PyResult<String> {
         Ok(self.inner.api_prefix.clone())
     }
 
     #[getter]
-    pub fn account(&self) -> PyResult<String> {
+    fn account(&self) -> PyResult<String> {
         Ok(self.inner.account.clone())
     }
 
     #[getter]
-    pub fn product(&self) -> PyResult<String> {
+    fn product(&self) -> PyResult<String> {
         Ok(self.inner.product.clone())
     }
 
     #[getter]
-    pub fn package(&self) -> PyResult<String> {
+    fn package(&self) -> PyResult<String> {
         Ok(self.inner.package.clone())
     }
 
     #[getter]
-    pub fn environment(&self) -> PyResult<Option<String>> {
+    fn environment(&self) -> PyResult<Option<String>> {
         Ok(self.inner.environment.clone())
     }
 
     #[getter]
-    pub fn license_key(&self) -> PyResult<Option<String>> {
+    fn license_key(&self) -> PyResult<Option<String>> {
         Ok(self.inner.license_key.clone())
     }
 
     #[getter]
-    pub fn token(&self) -> PyResult<Option<String>> {
+    fn token(&self) -> PyResult<Option<String>> {
         Ok(self.inner.token.clone())
     }
 
     #[getter]
-    pub fn public_key(&self) -> PyResult<Option<String>> {
+    fn public_key(&self) -> PyResult<Option<String>> {
         Ok(self.inner.public_key.clone())
     }
 
     #[getter]
-    pub fn platform(&self) -> PyResult<Option<String>> {
+    fn platform(&self) -> PyResult<Option<String>> {
         Ok(self.inner.platform.clone())
     }
 
     #[getter]
-    pub fn user_agent(&self) -> PyResult<Option<String>> {
+    fn user_agent(&self) -> PyResult<Option<String>> {
         Ok(self.inner.user_agent.clone())
     }
 
     #[getter]
-    pub fn max_clock_drift(&self) -> PyResult<Option<i64>> {
+    fn max_clock_drift(&self) -> PyResult<Option<i64>> {
         Ok(self.inner.max_clock_drift)
     }
 }

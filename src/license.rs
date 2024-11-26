@@ -37,37 +37,37 @@ pub struct LicenseCheckoutOpts {}
 #[pymethods]
 impl License {
     #[getter]
-    pub fn id(&self) -> PyResult<String> {
+    fn id(&self) -> PyResult<String> {
         Ok(self.inner.id.clone())
     }
 
     #[getter]
-    pub fn key(&self) -> PyResult<String> {
+    fn key(&self) -> PyResult<String> {
         Ok(self.inner.key.clone())
     }
 
     #[getter]
-    pub fn name(&self) -> PyResult<Option<String>> {
+    fn name(&self) -> PyResult<Option<String>> {
         Ok(self.inner.name.clone())
     }
 
     #[getter]
-    pub fn expiry(&self) -> PyResult<Option<Date>> {
+    fn expiry(&self) -> PyResult<Option<Date>> {
         Ok(self.inner.expiry.map(Date::from))
     }
 
     #[getter]
-    pub fn status(&self) -> PyResult<Option<String>> {
+    fn status(&self) -> PyResult<Option<String>> {
         Ok(self.inner.status.clone())
     }
 
     #[getter]
-    pub fn policy(&self) -> PyResult<Option<String>> {
+    fn policy(&self) -> PyResult<Option<String>> {
         Ok(self.inner.policy.clone())
     }
 
     #[getter]
-    pub fn scheme(&self) -> PyResult<Option<SchemeCode>> {
+    fn scheme(&self) -> PyResult<Option<SchemeCode>> {
         Ok(match self.inner.scheme {
             Some(keygen_rs::license::SchemeCode::Ed25519Sign) => Some(SchemeCode::Ed25519Sign),
             _ => None
@@ -124,7 +124,6 @@ impl License {
         }).collect::<Vec<keygen_rs::component::Component>>();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
-            // TODO: pass through components
             let result = my_struct.inner.activate(&fingerprint, &components).await;
             match result {
                 Ok(machine) => Ok(Machine::from(machine)),

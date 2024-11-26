@@ -3,7 +3,7 @@ use pyo3::types::PyString;
 use pyo3::{Bound, IntoPyObject, PyErr, Python};
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Date(DateTime<Utc>);
+pub(crate) struct Date(DateTime<Utc>);
 
 impl<'py> IntoPyObject<'py> for Date {
     type Target = PyString;

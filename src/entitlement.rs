@@ -18,11 +18,11 @@ pub fn entitlement_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
 #[pyclass(frozen)]
 #[derive(Debug, Clone)]
 pub struct Entitlement {
-    pub id: String,
-    pub name: Option<String>,
-    pub code: String,
-    pub created: DateTime<Utc>,
-    pub updated: DateTime<Utc>,
+    id: String,
+    name: Option<String>,
+    code: String,
+    created: DateTime<Utc>,
+    updated: DateTime<Utc>,
 }
 
 impl Entitlement {
