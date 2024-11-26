@@ -1,6 +1,7 @@
 use pyo3::prelude::*;
 use crate::utils::create_interface;
 use keygen_rs::component::Component as KeygenRsComponent;
+use crate::json::JsonValue;
 
 #[pymodule(name = "component")]
 pub fn component_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -26,11 +27,8 @@ impl Component {
         }
     }
 
-    // pub fn create_object(&self) -> serde_json::Value {
-    //     let object = KeygenRsComponent::create_object(&self.inner);
-    //
-    //     match object {
-    //         _ => object,
-    //     }
-    // }
+    pub fn create_object(&self) -> PyResult<JsonValue> {
+        let object = KeygenRsComponent::create_object(&self.inner);
+        Ok(JsonValue(object))
+    }
 }

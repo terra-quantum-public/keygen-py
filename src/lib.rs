@@ -23,6 +23,7 @@ pub mod license_file;
 pub mod machine;
 pub mod errors;
 pub mod component;
+mod json;
 
 #[pyfunction]
 fn verify(scheme: SchemeCode, signed_key: &str) -> PyResult<String> {
