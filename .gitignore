@@ -12,5 +12,4 @@ dist
 
 python/keygen_sh/*.so
 
-# TODO: for now keep out tests because of potential secrets for testing
-test
+.env
