@@ -121,23 +121,4 @@ impl Machine {
             }
         })
     }
-
-    // TODO
-    // pub fn monitor(
-    //     self: Arc<Self>,
-    //     heartbeat_interval: Duration,
-    //     tx: Option<Sender<Result<Machine, Error>>>,
-    //     cancel_rx: Option<Receiver<()>>,
-    // ) -> BoxFuture<'static, ()> {
-    // pub fn monitor<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<PyAny>> {
-    //     let my_struct = self.clone();
-    //
-    //     pyo3_async_runtimes::tokio::future_into_py(py, async move {
-    //         let result = my_struct.inner.monitor().await;
-    //         match result {
-    //             Ok(m) => Ok(Machine::from(m)),
-    //             Err(e) => Err(KeygenError::from_error(e)),
-    //         }
-    //     })
-    // }
 }

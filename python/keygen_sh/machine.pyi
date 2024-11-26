@@ -33,10 +33,3 @@ class Machine:
         Ping given machine.
         """
         ...
-
-    # TODO: Needs to be properly defined and implemented
-    async def monitor(self) -> None:
-        """
-        Ping given machine.
-        """
-        ...
