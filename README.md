@@ -21,7 +21,7 @@ Add this to your `pyproject.toml`:
 
 ```toml
 [dependencies]
-keygen-py = "0.1.0"
+keygen-py = "0.1.1"
 ```
 
 ## Config
