@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import json
 from typing import Type
-
+from keygen_sh._errors import KeygenError
 
 class Error(Exception):
     def __init__(self, error_message: str, details: str = None):
@@ -9,8 +9,8 @@ class Error(Exception):
         self.error_message = error_message
 
     @classmethod
-    def from_json(cls, error_json: str) -> "Error":
-        error_dict = json.loads(error_json)
+    def from_error(cls, error: KeygenError) -> "Error":
+        error_dict = json.loads(error.args[0])
         error_type = error_dict.get("type")
         error_class = cls.get_error_class(error_type)
         if isinstance(error_dict.get('details'), str):

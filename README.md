@@ -79,6 +79,28 @@ data = verify(SchemeCode.Ed25519Sign, "A_KEYGEN_LICENSE_KEY")
 print(data)
 ```
 
+### Error Handling
+
+Due to the nature of how errors are propagated from the Rust bindings to Python, currently error handling works like the following:
+
+```python
+import asyncio
+from keygen_sh import validate
+from keygen_sh.errors import KeygenError, Error, LicenseKeyInvalid
+
+
+async def amain():
+    try:
+        await validate(["YOUR_DEVICE_FINGERPRINT"], [])
+    except KeygenError as ex:
+        error = Error.from_error(ex)
+        if isinstance(error, LicenseKeyInvalid):
+            # handle a license key invalid error
+            print(f"error code: {error.code}")
+
+if __name__ == '__main__':
+    asyncio.run(amain())
+```
 
 ## Examples
 
