@@ -1,8 +1,19 @@
 # Unofficial Keygen Python SDK
 
+## Table of Contents
 
-The `keygen-py` package allows Python programs to license using the [keygen.sh](https://keygen.sh) service.
-This is a wrapper around the rust package [keygen-rs](https://github.com/ahonn/keygen-rs) (so a lot of kudos there) to provide python bindings. 
+- [Installing](#installing)
+- [Config](#config)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Testing](#testing)
+- [Inspired by](#inspired-by)
+- [License](#license)
+
+
+The `keygen-py` package allows Python programs to manage licenses using the [keygen.sh](https://keygen.sh) service.
+
+This is a wrapper around the Rust package [keygen-rs](https://github.com/ahonn/keygen-rs) to provide Python bindings.
 
 ## Installing
 
@@ -10,17 +21,17 @@ Add this to your `pyproject.toml`:
 
 ```toml
 [dependencies]
-keygen-py = "0.0.1.dev1"
+keygen-py = "0.1.0"
 ```
 
 ## Config
 
 ### KeygenConfig
 
-Use `KeygenConfig` to configure the SDK globally. You should set this before making any API calls.
+Use `KeygenConfig` to configure the SDK globally. Set this before making any API calls.
 
 ```python
-from keygen_sh import set_config, KeygenConfig
+from keygen_sh.config import set_config, KeygenConfig
 
 set_config(KeygenConfig(
     api_url="https://api.keygen.sh",
@@ -37,8 +48,8 @@ set_config(KeygenConfig(
 
 ### Validate a License
 
-To validate a license, configure `KeygenConfig` with your Keygen account details. Then call the `validate` function with a device fingerprint
-(you can use [py-machineid](https://github.com/keygen-sh/py-machineid/tree/master) for this) or keep it empty depending on your policy:
+To validate a license, configure `KeygenConfig` with your Keygen account details. Then call the `validate` function with a device fingerprint.
+(You can use [py-machineid](https://github.com/keygen-sh/py-machineid/tree/master) for this) or keep it empty depending on your policy:
 
 ```python
 import asyncio
@@ -56,10 +67,11 @@ if __name__ == '__main__':
 
 ### Offline License Key Verification
 
-To verify a signed license key offline:
+To verify a signed license key offline, use the following:
 
 ```python
-from keygen_sh import verify, SchemeCode
+from keygen_sh import verify
+from keygen_sh.license import SchemeCode
 
 data = verify(SchemeCode.Ed25519Sign, "A_KEYGEN_LICENSE_KEY")
 
@@ -70,7 +82,7 @@ print(data)
 
 ## Examples
 
-For more detailed examples, please refer to the `examples` directory in the repository.
+For more detailed examples, refer to the `examples` directory in the repository.
 
 ## Testing
 

@@ -1,12 +1,29 @@
-use chrono::{DateTime, Utc};
-use pyo3::{IntoPy, Py, PyAny, PyObject, Python};
+use chrono::{DateTime, Datelike, Timelike, Utc};
+use pyo3::types::PyDateTime;
+use pyo3::{Bound, IntoPyObject, PyErr, Python};
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Date(DateTime<Utc>);
+pub(crate) struct Date(DateTime<Utc>);
 
-impl IntoPy<Py<PyAny>> for Date {
-    fn into_py(self, py: Python<'_>) -> PyObject {
-        self.0.to_rfc3339().into_py(py)
+impl<'py> IntoPyObject<'py> for Date {
+    type Target = PyDateTime;
+    type Output = Bound<'py, Self::Target>;
+    type Error = PyErr;
+
+    fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
+        let datetime = self.0;
+
+        PyDateTime::new(
+            py,
+            datetime.year(),
+            datetime.month() as u8,
+            datetime.day() as u8,
+            datetime.hour() as u8,
+            datetime.minute() as u8,
+            datetime.second() as u8,
+            datetime.timestamp_subsec_micros(),
+            None
+        )
     }
 }
 

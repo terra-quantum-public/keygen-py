@@ -1,6 +1,8 @@
 import os
 
-from keygen_sh import KeygenConfig, set_config, verify, SchemeCode
+from keygen_sh import verify
+from keygen_sh.license import SchemeCode
+from keygen_sh.config import KeygenConfig, set_config
 
 set_config(
     KeygenConfig(

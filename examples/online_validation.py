@@ -2,7 +2,8 @@ import asyncio
 import os
 import uuid
 
-from keygen_sh import set_config, validate, KeygenConfig
+from keygen_sh import validate
+from keygen_sh.config import set_config, KeygenConfig
 
 set_config(
     KeygenConfig(
