@@ -74,6 +74,32 @@ impl License {
         })
     }
 
+    #[staticmethod]
+    #[pyo3(signature = (license_id, fingerprint, components=None))]
+    fn activate_machine(py: Python, license_id: String, fingerprint: String, components: Option<Vec<Component>>) -> PyResult<Bound<PyAny>> {
+        let license = KeygenRsLicense {
+            id: license_id,
+            expiry: None,
+            name: None,
+            key: String::new(),
+            scheme: None,
+            policy: None,
+            status: None,
+        };
+
+        let components = components.unwrap_or_else(|| Vec::new()).iter().map(|c| {
+            c.clone().into()
+        }).collect::<Vec<keygen_rs::component::Component>>();
+
+        pyo3_async_runtimes::tokio::future_into_py(py, async move {
+            let result = license.activate(&fingerprint, &components).await;
+            match result {
+                Ok(machine) => Ok(Machine::from(machine)),
+                Err(e) => Err(KeygenError::from_error(e)),
+            }
+        })
+    }
+
     #[pyo3(signature = (fingerprints=None, entitlements=None))]
     fn validate<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
         let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty(py));

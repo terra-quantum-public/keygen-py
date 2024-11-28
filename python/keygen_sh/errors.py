@@ -3,6 +3,7 @@ import json
 from typing import Type
 from keygen_sh._errors import KeygenError
 
+
 class Error(Exception):
     def __init__(self, error_message: str, details: str = None):
         super().__init__(error_message)
@@ -13,10 +14,10 @@ class Error(Exception):
         error_dict = json.loads(error.args[0])
         error_type = error_dict.get("type")
         error_class = cls.get_error_class(error_type)
-        if isinstance(error_dict.get('details'), str):
+        if isinstance(error_dict.get("details"), str):
             return error_class()
 
-        return error_class(**error_dict.get('details'))
+        return error_class(**error_dict.get("details"))
 
     @staticmethod
     def get_error_class(error_type: str) -> Type["Error"]:
@@ -172,9 +173,18 @@ class RateLimitExceeded(Error):
     reset: int
     retry_after: int
 
-    def __init__(self, window: str, count: int, limit: int, remaining: int, reset: int, retry_after: int):
+    def __init__(
+        self,
+        window: str,
+        count: int,
+        limit: int,
+        remaining: int,
+        reset: int,
+        retry_after: int,
+    ):
         super().__init__(
-            f"Rate limit exceeded: window={window}, count={count}, limit={limit}, remaining={remaining}, reset={reset}, retry_after={retry_after}")
+            f"Rate limit exceeded: window={window}, count={count}, limit={limit}, remaining={remaining}, reset={reset}, retry_after={retry_after}"
+        )
         self.window = window
         self.count = count
         self.limit = limit

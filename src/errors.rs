@@ -1,7 +1,7 @@
 use keygen_rs::errors::Error;
-use pyo3::{create_exception, pymodule, Bound, PyErr, PyResult};
+use pyo3::{create_exception, pymodule, Bound, PyErr, PyResult, Python};
 use pyo3::exceptions::PyException;
-use pyo3::prelude::{PyModule, PyModuleMethods};
+use pyo3::prelude::{PyAnyMethods, PyModule, PyModuleMethods};
 use serde_json::json;
 
 create_exception!(errors_module, KeygenError, PyException);
@@ -9,6 +9,12 @@ create_exception!(errors_module, KeygenError, PyException);
 #[pymodule]
 #[pyo3(name = "_errors")]
 pub fn errors_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    Python::with_gil(|py| {
+        py.import("sys")?
+            .getattr("modules")?
+            .set_item("keygen_sh._errors", m)
+    })?;
+
     m.add("KeygenError", m.py().get_type::<KeygenError>())?;
     Ok(())
 }
