@@ -87,7 +87,7 @@ impl License {
             status: None,
         };
 
-        let components = components.unwrap_or_else(|| Vec::new()).iter().map(|c| {
+        let components = components.unwrap_or_default().iter().map(|c| {
             c.clone().into()
         }).collect::<Vec<keygen_rs::component::Component>>();
 
