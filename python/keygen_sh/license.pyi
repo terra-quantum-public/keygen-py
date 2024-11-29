@@ -2,8 +2,8 @@ import datetime
 from enum import Enum, auto
 from typing import Optional, List
 
+from keygen_sh.component import Component
 from machine import Machine
-
 
 class SchemeCode(Enum):
     Ed25519Sign = auto()
@@ -17,8 +17,24 @@ class License:
     status: Optional[str]
     policy: Optional[str]
 
+    @staticmethod
+    async def activate_machine(
+        license_id: str, fingerprint: str, components: Optional[list[Component]] = None
+    ) -> Machine:
+        """
+        Activate a machine
+
+        :param license_id: the id of the license
+        :param fingerprint: the fingerprint of the machine
+        :param components: optionally a list of components
+        :returns: the machine instance
+        """
+        ...
+
     async def validate(
-        self, fingerprints: Optional[list[str]] = None, entitlements: Optional[list[str]] = None
+        self,
+        fingerprints: Optional[list[str]] = None,
+        entitlements: Optional[list[str]] = None,
     ) -> License:
         """
         Validate a license.
@@ -42,4 +58,3 @@ class License:
         :return: Machines associated with this license
         """
     ...
-

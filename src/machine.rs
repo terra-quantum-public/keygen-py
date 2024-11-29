@@ -78,7 +78,7 @@ impl Machine {
         Ok(Date::from(self.inner.updated))
     }
 
-    fn deactivate<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<PyAny>> {
+    fn deactivate<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -96,7 +96,7 @@ impl Machine {
         py: Python<'a>,
         ttl: Option<i64>,
         include: Option<Vec<String>>,
-    ) -> PyResult<Bound<PyAny>> {
+    ) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -111,7 +111,7 @@ impl Machine {
         })
     }
 
-    fn ping<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<PyAny>> {
+    fn ping<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {

@@ -74,8 +74,34 @@ impl License {
         })
     }
 
+    #[staticmethod]
+    #[pyo3(signature = (license_id, fingerprint, components=None))]
+    fn activate_machine(py: Python<'_>, license_id: String, fingerprint: String, components: Option<Vec<Component>>) -> PyResult<Bound<'_, PyAny>> {
+        let license = KeygenRsLicense {
+            id: license_id,
+            expiry: None,
+            name: None,
+            key: String::new(),
+            scheme: None,
+            policy: None,
+            status: None,
+        };
+
+        let components = components.unwrap_or_default().iter().map(|c| {
+            c.clone().into()
+        }).collect::<Vec<keygen_rs::component::Component>>();
+
+        pyo3_async_runtimes::tokio::future_into_py(py, async move {
+            let result = license.activate(&fingerprint, &components).await;
+            match result {
+                Ok(machine) => Ok(Machine::from(machine)),
+                Err(e) => Err(KeygenError::from_error(e)),
+            }
+        })
+    }
+
     #[pyo3(signature = (fingerprints=None, entitlements=None))]
-    fn validate<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
+    fn validate<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<'a, PyAny>> {
         let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty(py));
         let entitlements = entitlements.unwrap_or_else(|| PyList::empty(py));
 
@@ -93,7 +119,7 @@ impl License {
     }
 
     #[pyo3(signature = (fingerprints=None, entitlements=None))]
-    fn validate_key<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<PyAny>> {
+    fn validate_key<'a>(&'a self, py: Python<'a>, fingerprints: Option<Bound<'a, PyList>>, entitlements: Option<Bound<'a, PyList>>) -> PyResult<Bound<'a, PyAny>> {
         let fingerprints = fingerprints.unwrap_or_else(|| PyList::empty(py));
         let entitlements = entitlements.unwrap_or_else(|| PyList::empty(py));
 
@@ -117,7 +143,7 @@ impl License {
         }
     }
 
-    fn activate<'a>(&'a self, py: Python<'a>, fingerprint: String, components: Vec<Component>) -> PyResult<Bound<PyAny>> {
+    fn activate<'a>(&'a self, py: Python<'a>, fingerprint: String, components: Vec<Component>) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
         let components = components.iter().map(|c| {
             c.clone().into()
@@ -132,7 +158,7 @@ impl License {
         })
     }
 
-    fn deactivate<'a>(&'a self, py: Python<'a>, id: String) -> PyResult<Bound<PyAny>> {
+    fn deactivate<'a>(&'a self, py: Python<'a>, id: String) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -144,7 +170,7 @@ impl License {
         })
     }
 
-    fn machine<'a>(&'a self, py: Python<'a>, id: String) -> PyResult<Bound<PyAny>> {
+    fn machine<'a>(&'a self, py: Python<'a>, id: String) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -156,7 +182,7 @@ impl License {
         })
     }
 
-    fn machines<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<PyAny>> {
+    fn machines<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -172,7 +198,7 @@ impl License {
         })
     }
 
-    fn entitlements<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<PyAny>> {
+    fn entitlements<'a>(&'a self, py: Python<'a>) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
@@ -196,7 +222,7 @@ impl License {
     }
 
     #[pyo3(signature = (ttl=None, include=None))]
-    fn checkout<'a>(&'a self, py: Python<'a>, ttl: Option<i64>, include: Option<Vec<String>>) -> PyResult<Bound<PyAny>> {
+    fn checkout<'a>(&'a self, py: Python<'a>, ttl: Option<i64>, include: Option<Vec<String>>) -> PyResult<Bound<'a, PyAny>> {
         let my_struct = self.clone();
 
         pyo3_async_runtimes::tokio::future_into_py(py, async move {
