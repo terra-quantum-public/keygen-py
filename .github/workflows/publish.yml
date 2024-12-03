@@ -1,9 +1,8 @@
 name: Publish wheels and conda packages
 
 on:
-  push:
-    tags:
-      - v*
+  release:
+    types: [created]
 
 permissions:
   contents: read
