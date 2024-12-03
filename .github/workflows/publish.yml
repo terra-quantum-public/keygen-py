@@ -2,7 +2,7 @@ name: Publish wheels and conda packages
 
 on:
   release:
-    types: [created]
+    types: [released]
 
 permissions:
   contents: read
