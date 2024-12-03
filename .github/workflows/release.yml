@@ -149,9 +149,6 @@ jobs:
           subject-path: |
             wheels-*/*
             conda-*/*
-      - name: Get project version
-        id: 'pyproject_version'
-        run: echo "version=v$(grep -m 1 version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | cut -d' ' -f3)" >> $GITHUB_OUTPUT
       - name: Publish to prefix.dev channel
         run: |
           for pkg in $(find conda-*/* -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
