@@ -9,7 +9,7 @@ create_exception!(errors_module, KeygenError, PyException);
 #[pymodule]
 #[pyo3(name = "_errors")]
 pub fn errors_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         py.import("sys")?
             .getattr("modules")?
             .set_item("keygen_sh._errors", m)
