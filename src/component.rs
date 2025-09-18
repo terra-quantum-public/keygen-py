@@ -5,7 +5,7 @@ use crate::json::JsonValue;
 #[pymodule(name = "component")]
 pub fn component_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Hack: workaround for https://github.com/PyO3/pyo3/issues/759
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         py.import("sys")?
             .getattr("modules")?
             .set_item("keygen_sh.component", m)

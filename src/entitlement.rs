@@ -5,7 +5,7 @@ use pyo3::{pyclass, pymodule, Bound, PyResult, Python};
 #[pymodule(name = "entitlement")]
 pub fn entitlement_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Hack: workaround for https://github.com/PyO3/pyo3/issues/759
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         py.import("sys")?
             .getattr("modules")?
             .set_item("keygen_sh.entitlement", m)

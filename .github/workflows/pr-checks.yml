@@ -97,6 +97,7 @@ jobs:
             3.10
             3.11
             3.12
+            3.13
           architecture: ${{ matrix.platform.target }}
       - uses: actions/setup-python@v5
         if: runner.os != 'Windows'
@@ -106,6 +107,7 @@ jobs:
             3.10
             3.11
             3.12
+            3.13
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
