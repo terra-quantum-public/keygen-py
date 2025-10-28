@@ -3,7 +3,7 @@ name = "keygen-py"
 version = "0.1.8"
 license = "MIT"
 description = "Unofficial Keygen SDK for Python. Integrate license activation and offline licensing. Wrapper around keygen-rs rust crate"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 authors = [
     { name = "Terra Quantum AG", email = "info@terraquantum.swiss" },
     { name = "Cedric Kring", email = "ck@terraquantum.swiss" },
@@ -14,7 +14,7 @@ authors = [
 package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
+python = ">=3.11,<=3.14"
 maturin = ">=1.0,<2.0"
 
 [tool.poetry.group.dev.dependencies]
