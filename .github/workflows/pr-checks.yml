@@ -40,16 +40,12 @@ jobs:
             target: x86_64
             target-platform: linux-64
             before: 'yum install --assumeyes perl-core'
-            manylinux: 'auto'
+            manylinux: '2_28'
             create-conda-package: true
           - runner: ubuntu-latest
             target: x86_64
             before: 'apt update && apt install -y libssl-dev'
             manylinux: 'musllinux_1_2'
-          - runner: ubuntu-latest
-            target: x64
-            before: 'yum install --assumeyes perl-core'
-            manylinux: 'auto'
           - runner: ubuntu-latest
             target: x86
             before: 'apt update && apt install -y libssl-dev'
@@ -57,10 +53,7 @@ jobs:
           - runner: ubuntu-latest
             target: aarch64
             before: 'apt update && apt install -y libssl-dev'
-          - runner: ubuntu-latest
-            target: aarch64
-            before: 'apt update && apt install -y libssl-dev'
-            manylinux: 'auto'
+            manylinux: '2_28'
           - runner: ubuntu-latest
             target: aarch64
             before: 'apt update && apt install -y libssl-dev'
@@ -68,7 +61,7 @@ jobs:
           - runner: ubuntu-latest
             target: armv7
             before: 'apt update && apt install -y libssl-dev'
-            manylinux: 'auto'
+            manylinux: '2_28'
           - runner: ubuntu-latest
             target: armv7
             before: 'apt update && apt install -y libssl-dev'
