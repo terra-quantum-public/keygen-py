@@ -218,7 +218,7 @@ jobs:
             }
 
       - name: Create release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           body: ${{ steps.build_changelog.outputs.changelog }}
           tag_name: ${{ needs.should_skip.outputs.version }}
