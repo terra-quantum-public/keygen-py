@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: 3.x
       - name: Build conda package
-        uses: prefix-dev/rattler-build-action@v0.2.19
+        uses: prefix-dev/rattler-build-action@v0.2.38
         with:
           recipe-path: 'conda-recipes/deps/py-machineid/recipe.yaml'
       - name: Publish to prefix.dev channel

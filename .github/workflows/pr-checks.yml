@@ -109,7 +109,7 @@ jobs:
           before-script-linux: ${{ matrix.platform.before }}
       - name: Build conda package
         if: matrix.platform.create-conda-package
-        uses: prefix-dev/rattler-build-action@v0.2.19
+        uses: prefix-dev/rattler-build-action@v0.2.38
         with:
           upload-artifact: false
           artifact-name: conda-${{ matrix.platform.runner }}-${{ matrix.platform.target }}
