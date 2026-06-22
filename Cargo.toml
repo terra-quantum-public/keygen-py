@@ -3,7 +3,7 @@ name = "keygen-py"
 edition = "2021"
 
 [dependencies]
-keygen-rs = "0.3.0"
+keygen-rs = "0.4.3"
 pyo3 = { version = "0.26.0", features = ["extension-module", "serde"] }
 pyo3-async-runtimes = { version = "0.26.0", features = ["tokio-runtime"] }
 chrono = "0.4.38"

@@ -39,7 +39,7 @@ pub struct KeygenConfig {
 
 #[pymethods]
 impl KeygenConfig {
-    #[pyo3(signature = (api_url, api_version, api_prefix, account, product, package=None, environment=None, license_key=None, token=None, public_key=None, platform=None, user_agent=None, max_clock_drift=5)
+    #[pyo3(signature = (api_url, api_version, api_prefix, account, product, package=None, environment=None, license_key=None, token=None, public_key=None, platform=None, user_agent=None, verify_keygen_signature=true, max_clock_drift=5)
     )]
     #[new]
     #[allow(clippy::too_many_arguments)]
@@ -55,7 +55,9 @@ impl KeygenConfig {
                public_key: Option<String>,
                platform: Option<String>,
                user_agent: Option<String>,
+               verify_keygen_signature: Option<bool>,
                max_clock_drift: Option<i64>,
+
     ) -> Self {
         KeygenConfig {
             inner: keygen_rs::config::KeygenConfig {
@@ -65,6 +67,7 @@ impl KeygenConfig {
                 account,
                 product,
                 package: package.unwrap_or("".to_string()),
+                verify_keygen_signature: verify_keygen_signature.or(Some(true)),
                 environment,
                 license_key,
                 token,

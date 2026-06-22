@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::date::Date;
 use crate::entitlement::Entitlement;
 use crate::machine::Machine;
@@ -85,6 +86,7 @@ impl License {
             scheme: None,
             policy: None,
             status: None,
+            metadata: HashMap::new(),
         };
 
         let components = components.unwrap_or_default().iter().map(|c| {

@@ -15,8 +15,9 @@ class KeygenConfig:
     public_key: Optional[str] = None
     platform: Optional[str] = None
     user_agent: Optional[str] = None
+    verify_keygen_signature: Optional[bool] = True
     max_clock_drift: Optional[int] = 5
-    
+
 
 def set_config(config: KeygenConfig) -> None:
     """
