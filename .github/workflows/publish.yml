@@ -19,7 +19,7 @@ jobs:
       version: ${{ steps.get_current_version.outputs.version }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -104,7 +104,7 @@ jobs:
             target-platform: osx-arm64
             create-conda-package: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         if: runner.os == 'Windows'
         with:
@@ -147,7 +147,7 @@ jobs:
   sdist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build sdist
         uses: PyO3/maturin-action@v1
         with:
@@ -169,7 +169,7 @@ jobs:
       contents: write
       attestations: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install rattler-build
         run: |
           mkdir -p ${{ runner.temp }}/rattler-build
