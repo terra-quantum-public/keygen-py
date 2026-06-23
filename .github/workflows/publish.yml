@@ -178,7 +178,7 @@ jobs:
             -o ${{ runner.temp }}/rattler-build/rattler-build
           chmod +x ${{ runner.temp }}/rattler-build/rattler-build
           echo ${{ runner.temp }}/rattler-build >> $GITHUB_PATH
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
